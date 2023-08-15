@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Server Checker</title>
+  <style>
+    .loading-indicator {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #3498db;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <h1>Server Status:</h1>
+  <ul id="status-list">
+    <!-- Loading indicator -->
+    <div id="loading">
+      <div class="loading-indicator"></div>
+    </div>
+  </ul>
+
+  <!-- JavaScript for fetching and updating status -->
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const statusList = document.getElementById('status-list');
+      const loadingIndicator = document.getElementById('loading');
+      
+      const response = await fetch('/status'); // Change this route to your status check endpoint
+      const dotColors = await response.json();
+
+      loadingIndicator.innerHTML = ''; // Remove loading icon
+
+      dotColors.forEach(dot => {
+        const listItem = document.createElement('div');
+        listItem.innerHTML = `
+          <p>${dot.url}:</p>
+          <div style="width: 30px; height: 30px; border-radius: 50%; background-color: ${dot.color};"></div>
+        `;
+        statusList.appendChild(listItem);
+      });
+    });
+  </script>
+</body>
+</html>
